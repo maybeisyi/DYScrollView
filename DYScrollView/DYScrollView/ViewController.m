@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+/** 当前滚动方向 */
 typedef NS_ENUM(NSInteger, ScrollDirection) {
     ScrollDirectionUnknow,
     ScrollDirectionLeft,
@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
     _scrollDirection = ScrollDirectionUnknow;
     
     // 初始化一下所有要显示图片
-    _imageArr = @[[UIImage imageNamed:@"background-0"],[UIImage imageNamed:@"background-1"],[UIImage imageNamed:@"background-2"],[UIImage imageNamed:@"background-3"],[UIImage imageNamed:@"background-4"]];
+    _imageArr = @[[UIImage imageNamed:@"background-0"], [UIImage imageNamed:@"background-1"], [UIImage imageNamed:@"background-2"], [UIImage imageNamed:@"background-3"], [UIImage imageNamed:@"background-4"]];
     
     // 初始化一下scrollView
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 100, SCREEN_WIDTH, 250)];
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
     _otherImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 250)];
     [_scrollView addSubview:_otherImageView];
     
-    // 永远都显示中间的区域，而_currentImageView永远在中间，也就意味着永远显示_currentImageView
+    // 初始化就显示中间区域，永远都显示中间的区域，而_currentImageView永远在中间，也就意味着永远显示_currentImageView
     _scrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
 }
 
@@ -70,11 +70,9 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     /** 判断一下此时是向右滚动还是向左滚动，根据设想，停止时的scrollView显示的内容永远是中间，那么scrollView.contentOffset.x 应该永远是 scrollView.frame.size.width，这里就是SCREEN_WIDTH。那么在动的时候通过scrollView.contentOffset.x 就可以知道是向哪个方向滚动
      
-     性能优化：1. 该方法在滚动过程中重复调用，向左向右滑动其实在改变时赋值即可，后续无需判断？  ——>利用self.scrollDirection进方向判断来优化操作次数
-     2._otherImageView 反复调用 setFrame 和 setImage 方法，是否会有损性能？ ——>利用self.scrollDirection进方向判断来优化操作次数
+     性能优化：1. 该方法在滚动过程中重复调用，向左向右滑动其实在改变时赋值即可，后续无需判断？  ——>利用self.scrollDirection进方向判断来优化判断逻辑
+     2._otherImageView 反复调用 setFrame 和 setImage 方法，是否会有损性能？ ——>利用self.scrollDirection进方向判断来优化判断逻辑
      */
-    
-    
     if (scrollView.contentOffset.x > SCREEN_WIDTH) {
         
         if (self.scrollDirection == ScrollDirectionUnknow || self.scrollDirection == ScrollDirectionLeft) {
@@ -121,7 +119,6 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
         }
         _currentImageView.image = _imageArr[_currentPage];
         scrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
-        
     } else if (scrollView.contentOffset.x <= 0) {
         NSLog(@"向左越界");
         if (_currentPage == 0) {
@@ -131,7 +128,6 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
         }
         _currentImageView.image = _imageArr[_currentPage];
         scrollView.contentOffset = CGPointMake(SCREEN_WIDTH, 0);
-        
     }
 }
 
