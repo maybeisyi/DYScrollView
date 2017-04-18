@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+
 /** 当前滚动方向 */
 typedef NS_ENUM(NSInteger, ScrollDirection) {
     ScrollDirectionUnknow,
@@ -27,7 +28,7 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
 @property (nonatomic, assign) NSInteger currentPage;
 /** 所有图片数组 */
 @property (nonatomic, strong) NSArray<UIImage *> *imageArr;
-/** 滚动方向 */
+/** 滚动方向，用于左右判断时的性能优化 */
 @property (nonatomic, assign) ScrollDirection scrollDirection;
 
 @end
@@ -40,12 +41,12 @@ typedef NS_ENUM(NSInteger, ScrollDirection) {
     _scrollDirection = ScrollDirectionUnknow;
     
     // 初始化一下所有要显示图片
-    _imageArr = @[[UIImage imageNamed:@"background-0"], [UIImage imageNamed:@"background-1"], [UIImage imageNamed:@"background-2"], [UIImage imageNamed:@"background-3"], [UIImage imageNamed:@"background-4"]];
+    _imageArr = @[[UIImage imageNamed:@"0"], [UIImage imageNamed:@"1"], [UIImage imageNamed:@"2"], [UIImage imageNamed:@"3"], [UIImage imageNamed:@"4"]];
     
     // 初始化一下scrollView
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 100, SCREEN_WIDTH, 250)];
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 100, SCREEN_WIDTH, SCREEN_WIDTH * 0.5)];
     // 滚动范围 X轴为 >= 3，才能实现左右都能滚动
-    _scrollView.contentSize = CGSizeMake(SCREEN_WIDTH * 3, 250);
+    _scrollView.contentSize = CGSizeMake(SCREEN_WIDTH * 3, _scrollView.frame.size.height);
     _scrollView.pagingEnabled = YES;
     _scrollView.delegate = self;
     [self.view addSubview:_scrollView];
